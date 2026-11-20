@@ -15,9 +15,10 @@ function toggleAudio(){
     if(muted)music.pause();else music.play().catch(()=>{});
     render();
 }
-function restore(){
+function restore(onStartup = false){
     try{snapshot=localStorage.getItem(key);session=JSON.parse(snapshot);}
     catch{app.textContent='Enable browser storage to play your free round.';return;}
+    if(onStartup && session?.finished) showingMenu = true;
     render();
     if(session?.game==='Slots' && !session.finished && state().phase==='loading')revealSlots();
 }
@@ -63,4 +64,4 @@ window.addEventListener('storage',e=>{if(e.key===key)restore();});
 document.addEventListener('click',e=>{
     if(localStorage.getItem(key)!==snapshot){e.stopImmediatePropagation();e.preventDefault();restore();}
 },true);
-restore();
+restore(true);
