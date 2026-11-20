@@ -28,7 +28,14 @@ function choose(game){
     if(!muted)music.play().catch(()=>{});
     render();
 }
-function pick(){selecting=true;render();}
+let showingMenu = false;
+function mainMenu(){
+    showingMenu = true;
+    selecting = false;
+    render();
+    app.querySelector('h1')?.focus();
+}
+function pick(){if(!session){selecting=true;render();}}
 function render(){
     if(session){
         try{
@@ -37,9 +44,9 @@ function render(){
         }catch{app.textContent='Enable browser storage to play your free round.';return;}
     }
     const sound=button(muted?'Sound off':'Sound on','toggleAudio()');
-    if(!session){
-        app.innerHTML='<section class="welcome"><img src="cover.jpg" alt="Las Vegas Casino by CK My Apps"><div class="panel"><h1>Las Vegas Casino Lite</h1><p>Play one free round at any one of the five tables.</p>'+
-        (selecting?'<h2>Choose your table</h2>'+list(games,g=>button(g,`choose('${g}')`)):button('New Game','pick()'))+
+    if(!session || (session.finished && showingMenu)){
+        app.innerHTML='<section class="welcome"><img src="cover.jpg" alt="Las Vegas Casino by CK My Apps"><div class="panel"><h1 tabindex="-1">Las Vegas Casino Lite</h1><p>'+(session?'Your free round is complete.':'Play one free round at any one of the five tables.')+'</p>'+
+        (session?'<button disabled>New Game</button>':selecting?'<h2>Choose your table</h2>'+list(games,g=>button(g,`choose('${g}')`)):button('New Game','pick()'))+
         '<div class="locked"><button disabled>Load Game</button><button disabled>Play Online</button></div>'+storeLink+'</div></section>';
         return;
     }
@@ -47,7 +54,7 @@ function render(){
     if(session.finished){
         const detail=session.game==='Dice'?(s.throwDice||[]).join(' + ')+' · '+s.diceOutcome:s.message;
         const summary=session.net>0?'You won '+usd(session.net):session.net<0?'You lost '+usd(-session.net):'Even round';
-        app.innerHTML='<section class="welcome"><img src="cover.jpg" alt="Las Vegas Casino"><div class="panel"><h1>'+summary+'</h1><p>'+escapeHTML(detail||'')+'</p><h2>Your free round is complete.</h2><p>Get Las Vegas Casino for Mac to keep playing all five games.</p>'+storeLink+'</div></section>';
+        app.innerHTML='<section class="welcome"><img src="cover.jpg" alt="Las Vegas Casino"><div class="panel"><h1>'+summary+'</h1><p>'+escapeHTML(detail||'')+'</p><h2>Your free round is complete.</h2><p>Get Las Vegas Casino for Mac to keep playing all five games.</p>'+storeLink+'<div class="return-menu">'+button('Back to Main Menu','mainMenu()')+'</div></div></section>';
         music.pause();return;
     }
     app.innerHTML='<section class="page"><header><h1>'+session.game+'</h1>'+sound+'</header><div class="player">Guest · '+usd(player().chips)+' USD</div><section class="table">'+screens[session.game]()+'<p role="status">'+escapeHTML(s.message||'')+'</p></section></section>';

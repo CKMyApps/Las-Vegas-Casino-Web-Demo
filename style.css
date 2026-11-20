@@ -7,3 +7,8 @@ body{background:#201017 url(room.jpg) center/cover fixed}
 .panel{width:min(48%,480px);padding:clamp(20px,4vw,52px);background:#143d33;border:1px solid #bd955d;border-radius:0 16px 16px 0;text-align:left}
 .panel h1{line-height:1.02}.panel h2{font-size:1.3rem}.locked{margin:.8rem 0}.buy{display:inline-block;color:#421522;background:#f4c36e;font-weight:700;border-radius:7px;padding:.7rem 1rem;text-decoration:none}.selected.card{outline:4px solid #ffc045}
 @media(max-width:700px){.welcome{flex-direction:column}.welcome>img,.panel{width:min(100%,440px);border-radius:10px}.page{padding:10px}.table{padding:10px}.reel{width:28%;height:4.8rem;margin:.12rem;font-size:clamp(.78rem,3.5vw,1.3rem)}.grid button{font-size:.85rem;padding:.36rem 0}}
+
+/* Frame the casino artwork above the publisher's signature. */
+.welcome > img { aspect-ratio: 3 / 2; object-fit: cover; object-position: top center; }
+.return-menu { margin-top: 1rem; }
+.return-menu button { margin: 0; }
